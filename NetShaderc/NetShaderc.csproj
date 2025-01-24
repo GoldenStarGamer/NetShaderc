@@ -1,20 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>.NETShaderc</Title>
+    <Authors>Starman</Authors>
+    <Description>.NET bindings for google's Shaderc</Description>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="shaderc_shared.dll" />
-  </ItemGroup>
 
   <ItemGroup>
     <Content Include="shaderc_shared.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="runtime\" />
   </ItemGroup>
 
 </Project>
