@@ -136,37 +136,6 @@ namespace NetShaderc
 		[UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
 		internal static partial void shaderc_compile_options_set_forced_version_profile(RawCompileOptions options, int version, Profile profile);
 
-		
-		
-
-
-		/// <summary>
-		/// An includer callback type for mapping an #include request to an include
-		/// result.  The user_data parameter specifies the client context.  The
-		/// requested_source parameter specifies the name of the source being requested.
-		/// The type parameter specifies the kind of inclusion request being made.
-		/// The requesting_source parameter specifies the name of the source containing
-		/// the #include request.  The includer owns the result object and its contents,
-		/// and both must remain valid until the release callback is called on the result
-		/// object.
-		/// </summary>
-		/// <param name="userData">Pointer to user data (context)</param>
-		/// <param name="requestedSource">Pointer to requested source string</param>
-		/// <param name="type">Integer specifying the inclusion type</param>
-		/// <param name="requestingSource">Pointer to requesting source string</param>
-		/// <param name="includeDepth">Depth of the include</param>
-		/// <returns></returns>
-		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-		internal delegate nint IncludeResolveFn(RawUserData userData, string requestedSource, int type, string requestingSource, Size includeDepth);
-
-		/// <summary>
-		/// An includer callback type for destroying an include result.
-		/// </summary>
-		/// <param name="userData">Pointer to user data</param>
-		/// <param name="includeResult">Pointer to ShadercIncludeResult</param>
-		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-		internal delegate void IncludeResultReleaseFn(nint userData, nint includeResult);
-
 		/// <summary>
 		/// Sets includer callback functions.
 		/// </summary>
@@ -176,7 +145,7 @@ namespace NetShaderc
 		/// <param name="user_data"></param>
 		[LibraryImport("shaderc_shared", StringMarshalling = StringMarshalling.Utf8)]
 		[UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-		internal static partial void shaderc_compile_options_set_include_callbacks(RawCompileOptions options, IncludeResolveFn resolver, IncludeResultReleaseFn result_releaser, RawUserData user_data);
+		internal static partial void shaderc_compile_options_set_include_callbacks(RawCompileOptions options, Options.IncludeResolve.IncludeResolveFn resolver, Options.IncludeResolve.IncludeResultReleaseFn result_releaser, RawUserData user_data);
 
 		/// <summary>
 		/// Sets the RawCompiler mode to suppress warnings, overriding warnings-as-errors

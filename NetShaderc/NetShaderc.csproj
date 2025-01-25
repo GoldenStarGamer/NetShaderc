@@ -1,24 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Title>.NETShaderc</Title>
-    <Authors>Starman</Authors>
-    <Description>.NET bindings for google's Shaderc</Description>
+	<TargetFramework>net8.0</TargetFramework>
+	<ImplicitUsings>enable</ImplicitUsings>
+	<Nullable>enable</Nullable>
+	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	<Title>.NETShaderc</Title>
+	<Authors>Starman</Authors>
+	<Description>.NET bindings for google's Shaderc</Description>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="shaderc_shared.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+	<ItemGroup>
+		<!-- Include native libraries for different platforms -->
+		<None Include="runtimes\win-x64\native\shaderc_shared.dll">
+			<Pack>true</Pack>
+			<PackagePath>runtimes/win-x64/native/</PackagePath>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="runtime\" />
-  </ItemGroup>
+	<ItemGroup>
+	  <Folder Include="runtimes\osx-x64\native\" />
+	</ItemGroup>
+
 
 </Project>
