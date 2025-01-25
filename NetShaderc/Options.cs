@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -14,7 +16,7 @@ namespace NetShaderc
 	{
 		internal class OptHndl : IDisposable
 		{
-			nint handle;
+			readonly nint handle;
 
 			bool disp;
 
@@ -35,13 +37,51 @@ namespace NetShaderc
 
 				if (opt.DebugInfo) Shaderc.shaderc_compile_options_set_generate_debug_info(this);
 
-				if (opt.Optimization != null) Shaderc.shaderc_compile_options_set_optimization_level(handle, (OptimizationLevel)opt.Optimization);
+				if (opt.Optimization.HasValue) Shaderc.shaderc_compile_options_set_optimization_level(handle, opt.Optimization.Value);
 
-				if (opt.ForcedVersionProfile != null) Shaderc.shaderc_compile_options_set_forced_version_profile(this, ((KeyValuePair<int, Profile>)opt.ForcedVersionProfile).Key, ((KeyValuePair<int, Profile>)opt.ForcedVersionProfile).Value);
+				if (opt.ForcedVersionProfile.HasValue) Shaderc.shaderc_compile_options_set_forced_version_profile(this, opt.ForcedVersionProfile.Value.Key, opt.ForcedVersionProfile.Value.Value);
 
-				if (opt.Resolve != null) Shaderc.shaderc_compile_options_set_include_callbacks(this, opt.Resolve.Value.Resolve, opt.Resolve.Value.Release, opt.Resolve.Value.UserData);
+				if (opt.Resolve.HasValue) Shaderc.shaderc_compile_options_set_include_callbacks(this, opt.Resolve.Value.Resolve, opt.Resolve.Value.Release, opt.Resolve.Value.UserData);
 
-				if(opt.SuppressWarnings) Shaderc.shaderc_compile_options_set_suppress_warnings(this);
+				if (opt.SuppressWarnings) Shaderc.shaderc_compile_options_set_suppress_warnings(this);
+
+				if (opt.TargetEnv.HasValue) Shaderc.shaderc_compile_options_set_target_env(this, opt.TargetEnv.Value.Key, opt.TargetEnv.Value.Value);
+
+				if (opt.TargetSpirvVersion.HasValue) Shaderc.shaderc_compile_options_set_target_spirv(this, opt.TargetSpirvVersion.Value);
+
+				if (opt.WarningsAsErrors) Shaderc.shaderc_compile_options_set_warnings_as_errors(this);
+
+				if (opt.Limits != null) foreach (var limit in opt.Limits) Shaderc.shaderc_compile_options_set_limit(this, limit.Key, limit.Value);
+
+				if (opt.AutoBindUniforms) Shaderc.shaderc_compile_options_set_auto_bind_uniforms(this, true);
+
+				if (opt.AutoCombinedImageSampler) Shaderc.shaderc_compile_options_set_auto_combined_image_sampler(this, true);
+
+				if (opt.HLSLIOMapping) Shaderc.shaderc_compile_options_set_hlsl_io_mapping(this, true);
+
+				if (opt.HLSLOffsets) Shaderc.shaderc_compile_options_set_hlsl_offsets(this, true);
+
+				if (opt.BindingBase != null) foreach (var binding in opt.BindingBase) Shaderc.shaderc_compile_options_set_binding_base(this, binding.Key, binding.Value);
+
+				if (opt.BindingBaseForStage != null) foreach (var stage in opt.BindingBaseForStage) foreach (var binding in stage.Value) Shaderc.shaderc_compile_options_set_binding_base_for_stage(this, stage.Key, binding.Key, binding.Value);
+
+				if (opt.PreserveBindings) Shaderc.shaderc_compile_options_set_preserve_bindings(this, true);
+
+				if (opt.AutoMapLocations) Shaderc.shaderc_compile_options_set_auto_map_locations(this, true);
+
+				if (opt.RegisterSetAndBindingForStage != null) foreach (var rsbs in opt.RegisterSetAndBindingForStage) Shaderc.shaderc_compile_options_set_hlsl_register_set_and_binding_for_stage(this, rsbs.Key, rsbs.Value.reg, rsbs.Value.set, rsbs.Value.binding);
+
+				if (opt.RegisterSetAndBinding != null) Shaderc.shaderc_compile_options_set_hlsl_register_set_and_binding(this, opt.RegisterSetAndBinding.Value.reg, opt.RegisterSetAndBinding.Value.set, opt.RegisterSetAndBinding.Value.binding);
+
+				if (opt.HLSLFunctionality1) Shaderc.shaderc_compile_options_set_hlsl_functionality1(this, true);
+
+				if (opt.HLSL16BitTypes) Shaderc.shaderc_compile_options_set_hlsl_16bit_types(this, true);
+
+				if (opt.RelaxedVulkanRules) Shaderc.shaderc_compile_options_set_vulkan_rules_relaxed(handle, true);
+
+				if (opt.InvertY) Shaderc.shaderc_compile_options_set_invert_y(handle, true);
+
+				if (opt.NANClamp) Shaderc.shaderc_compile_options_set_nan_clamp(handle, true);
 			}
 
 			public static implicit operator nint(OptHndl obj)
@@ -54,6 +94,7 @@ namespace NetShaderc
 				if (!disp)
 				{
 					Shaderc.shaderc_compile_options_release(this);
+					GC.SuppressFinalize(this);
 					disp = true;
 				}
 			}
@@ -97,6 +138,11 @@ namespace NetShaderc
 			public nint UserData;
 		}
 
+		public struct RegisterSetBinding
+		{
+			public string reg, set, binding;
+		}
+
 		public Dictionary<string, string>? Macros;
 
 		public SourceLanguage Language = SourceLanguage.GLSL; // Shaderc specifies that GLSL is the default so me do that
@@ -110,6 +156,44 @@ namespace NetShaderc
 		public IncludeResolve? Resolve;
 
 		public bool SuppressWarnings;
+
+		public KeyValuePair<TargetEnv, uint>? TargetEnv;
+
+		public SpirvVersion? TargetSpirvVersion;
+
+		public bool WarningsAsErrors;
+
+		public Dictionary<Limit, int>? Limits;
+
+		public bool AutoBindUniforms = false;
+		
+		public bool AutoCombinedImageSampler = false;
+
+		public bool HLSLIOMapping = false;
+
+		public bool HLSLOffsets = false;
+
+		public Dictionary<UniformKind, uint>? BindingBase;
+
+		public Dictionary<ShaderKind, Dictionary<UniformKind, uint>>? BindingBaseForStage;
+
+		public bool PreserveBindings = false;
+
+		public bool AutoMapLocations = false;
+
+		public Dictionary<ShaderKind, RegisterSetBinding>? RegisterSetAndBindingForStage;
+
+		public RegisterSetBinding? RegisterSetAndBinding;
+
+		public bool HLSLFunctionality1 = false;
+
+		public bool HLSL16BitTypes = false;
+
+		public bool RelaxedVulkanRules = false;
+
+		public bool InvertY = false;
+
+		public bool NANClamp = false;
 
 		internal OptHndl Handle { get { return new OptHndl(this); } }
 	}

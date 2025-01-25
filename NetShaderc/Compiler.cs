@@ -17,35 +17,17 @@ namespace NetShaderc
 
 		public Result Compile(string source, CompileType type, ShaderKind kind, string file = "", string entry = "main", Options? opt = null)
 		{
-			if (disp) throw new ObjectDisposedException($"Compiler {nameof(Compile)} has been disposed");
-			var option = (opt == null ? null : opt.Handle);
-
-			Result result;
-
-			switch (type)
+			ObjectDisposedException.ThrowIf(disp, this);
+			var option = (opt?.Handle);
+			Result result = type switch
 			{
-				case CompileType.CodeToSPIRV:
-					
-					result = new(Shaderc.shaderc_compile_into_spv(handle, source, (nuint)source.Length, kind, file, entry, (option == null? nint.Zero : option)));
-					break;
-
-				case CompileType.CodeToAsm:
-					result = new(Shaderc.shaderc_compile_into_spv_assembly(handle, source, (nuint)source.Length, kind, file, entry, (option == null ? nint.Zero : option)));
-					break;
-
-				case CompileType.CodeToPreprocessed:
-					result = new(Shaderc.shaderc_compile_into_preprocessed_text(handle, source, (nuint)source.Length, kind, file, entry, (option == null ? nint.Zero : option)));
-					break;
-
-				case CompileType.AsmToSPIRV:
-					result = new(Shaderc.shaderc_assemble_into_spv(handle, source, (nuint)source.Length, (option == null ? nint.Zero : option)));
-					break;
-
-				default:
-					throw new NotSupportedException();
-			}
-
-			if (option != null) option.Dispose();
+				CompileType.CodeToSPIRV => new(Shaderc.shaderc_compile_into_spv(handle, source, (nuint)source.Length, kind, file, entry, (option ?? nint.Zero))),
+				CompileType.CodeToAsm => new(Shaderc.shaderc_compile_into_spv_assembly(handle, source, (nuint)source.Length, kind, file, entry, (option ?? nint.Zero))),
+				CompileType.CodeToPreprocessed => new(Shaderc.shaderc_compile_into_preprocessed_text(handle, source, (nuint)source.Length, kind, file, entry, (option ?? nint.Zero))),
+				CompileType.AsmToSPIRV => new(Shaderc.shaderc_assemble_into_spv(handle, source, (nuint)source.Length, (option ?? nint.Zero))),
+				_ => throw new NotSupportedException(),
+			};
+			option?.Dispose();
 			return result;
 		}
 
@@ -53,9 +35,10 @@ namespace NetShaderc
 		{
 			if (!disp)
 			{
-				disp = true;
 				Shaderc.shaderc_compiler_release(handle);
 				handle = nint.Zero;
+				GC.SuppressFinalize(this);
+				disp = true;
 			}
 		}
 
