@@ -1,5 +1,5 @@
-﻿using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.Marshalling;
 
 // Preety Pointers
@@ -9,7 +9,7 @@ using PtrUInt = nint; // unsigned int*
 using RawCompilationResult = nint;
 using RawCompileOptions = nint;
 using RawUserData = nint;
-using Size = nuint; // size_t
+using Size = nuint;
 
 namespace NetShaderc
 {
@@ -393,5 +393,14 @@ namespace NetShaderc
 		[UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
 		[return: MarshalAs(UnmanagedType.Bool)]
 		internal static partial bool shaderc_parse_version_profile(string str, PtrInt version, nint profile);
+
+		static Shaderc()
+		{
+			NativeLibrary.SetDllImportResolver(typeof(Shaderc).Assembly, (libraryName, executingAssembly, searchPath) =>
+			{	
+				return NativeLibrary.Load(libraryName);
+			});
+		}
+
 	}
 }

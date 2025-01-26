@@ -364,3 +364,6 @@ FodyWeavers.xsd
 
 # The documentation
 shaderc.h
+
+#libs
+*shaderc_shared.*
