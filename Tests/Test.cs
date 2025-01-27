@@ -16,8 +16,14 @@ namespace Tests
 			var vertres = compiler.Compile(vert, CompileType.CodeToSPIRV, ShaderKind.VertexShader);
 			var fragres = compiler.Compile(frag, CompileType.CodeToSPIRV, ShaderKind.FragmentShader);
 
-			File.WriteAllBytes("vertex.spv", vertres.Code);
-			File.WriteAllBytes("fragment.spv", fragres.Code);
+			if (vertres.Status != CompilationStatus.Success)
+				Console.WriteLine(vertres.ErrorMessage);
+
+			if (fragres.Status != CompilationStatus.Success)
+				Console.WriteLine(fragres.ErrorMessage);
+
+			if(vertres.Code is not null) File.WriteAllBytes("vertex.spv", vertres.Code);
+			if(fragres.Code is not null) File.WriteAllBytes("fragment.spv", fragres.Code);
 		}
 	}
 }

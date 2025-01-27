@@ -12,30 +12,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="runtimes\win-x64\native\shaderc_shared.dll" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<!-- Include native libraries for different platforms -->
-		<None Include="runtimes\win-x64\native\shaderc_shared.dll">
+		<None Include="shaderc_shared.dll">
+			<Include>shaderc_shared.dll</Include>
 			<Pack>true</Pack>
 			<PackagePath>runtimes/win-x64/native/</PackagePath>
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
-		<!--<None Include="runtimes\linux-x64\native\libshaderc_shared.so">
-			<Pack>true</Pack>
-			<PackagePath>runtimes/linux-x64/native/</PackagePath>
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Include="runtimes\osx-x64\native\libshaderc_shared.dylib">
-			<Pack>true</Pack>
-			<PackagePath>runtimes/osx-x64/native/</PackagePath>
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>-->
 	</ItemGroup>
-
-	<ItemGroup>
-	  <Page Include="runtimes\win-x64\native\shaderc_shared.dll" />
-	</ItemGroup>
-
+	
 </Project>

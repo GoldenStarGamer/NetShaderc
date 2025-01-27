@@ -58,14 +58,14 @@ namespace NetShaderc
 		// object requires synchronization IF AND ONLY IF some of them take a non-const
 		// argument.
 
-		[LibraryImport("shaderc_shared", EntryPoint = "shaderc_RawCompiler_release")]
+		[LibraryImport("shaderc_shared")]
 		[UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
 		internal static partial RawCompiler shaderc_compiler_initialize();
 
 		// Releases the resources held by the RawCompiler.
 		// After this call it is invalid to make any future calls to functions
 		// involving this RawCompiler.
-		[LibraryImport("shaderc_shared", EntryPoint = "shaderc_RawCompiler_release")]
+		[LibraryImport("shaderc_shared")]
 		[UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
 		internal static partial void shaderc_compiler_release(RawCompiler RawCompiler);
 
@@ -77,7 +77,7 @@ namespace NetShaderc
 		// Any function operating on RawCompileOptions must offer the
 		// basic thread-safety guarantee.
 
-		[LibraryImport("shaderc_shared", EntryPoint = "shaderc_RawCompiler_release")]
+		[LibraryImport("shaderc_shared")]
 		[UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
 		internal static partial RawCompileOptions shaderc_compile_options_initialize();
 
@@ -394,13 +394,7 @@ namespace NetShaderc
 		[return: MarshalAs(UnmanagedType.Bool)]
 		internal static partial bool shaderc_parse_version_profile(string str, PtrInt version, nint profile);
 
-		static Shaderc()
-		{
-			NativeLibrary.SetDllImportResolver(typeof(Shaderc).Assembly, (libraryName, executingAssembly, searchPath) =>
-			{	
-				return NativeLibrary.Load(libraryName);
-			});
-		}
+		
 
 	}
 }
