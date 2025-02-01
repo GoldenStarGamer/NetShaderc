@@ -9,13 +9,29 @@
 		<Title>.NETShaderc</Title>
 		<Authors>Starman</Authors>
 		<Description>.NET bindings for Google's Shaderc</Description>
-	</PropertyGroup>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<RepositoryUrl>https://github.com/GoldenStarGamer/NetShaderc</RepositoryUrl>
+		<PackageTags>vulkan;opengl;shaderc;glsl;hlsl;net;binding;shader</PackageTags>
+	  <UserSecretsId>eb37c0d7-1e85-433f-8860-422980f2ded5</UserSecretsId>
+  </PropertyGroup>
 
 	<ItemGroup>
 		<None Include="shaderc_shared.dll">
 			<Include>shaderc_shared.dll</Include>
 			<Pack>true</Pack>
 			<PackagePath>runtimes/win-x64/native/</PackagePath>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="libshaderc_shared.so">
+			<Include>shaderc_shared.dll</Include>
+			<Pack>true</Pack>
+			<PackagePath>runtimes/linux-x64/native/</PackagePath>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Include="libshaderc_shared.dylib">
+			<Include>shaderc_shared.dll</Include>
+			<Pack>true</Pack>
+			<PackagePath>runtimes/osx-x64/native/</PackagePath>
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>

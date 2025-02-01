@@ -11,7 +11,7 @@ namespace NetShaderc
 {
 	public class Result
 	{
-		nint Handle;
+		readonly nint Handle;
 		internal Result(nint handle)
 		{
 			Handle = handle;

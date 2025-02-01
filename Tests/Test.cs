@@ -21,9 +21,9 @@ namespace Tests
 
 			if (fragres.Status != CompilationStatus.Success)
 				Console.WriteLine(fragres.ErrorMessage);
-
-			if(vertres.Code is not null) File.WriteAllBytes("vertex.spv", vertres.Code);
-			if(fragres.Code is not null) File.WriteAllBytes("fragment.spv", fragres.Code);
+			
+			if (vertres.Code is not null) File.WriteAllBytes("vertex.spv", vertres.Code);
+			if (fragres.Code is not null) File.WriteAllBytes("fragment.spv", fragres.Code);
 		}
 	}
 }

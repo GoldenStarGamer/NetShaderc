@@ -1,9 +1,12 @@
 ﻿#version 460
-in vec2 texpos;
-out vec4 FragColor;
+layout(location = 0) in vec2 texpos;
+layout(location = 0) out vec4 FragColor;
 
-uniform sampler2DArray texs;
-uniform int texcount;
+layout(set = 1, binding = 0) uniform sampler2DArray texs;
+layout(set = 1, binding = 1, std140) uniform Uniforms
+{
+	int texcount;
+};
 
 void main()
 {
