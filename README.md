@@ -29,3 +29,6 @@ To write the result to a file just:
 if (vertres.Code is not null) File.WriteAllBytes("vertex.spv", vertres.Code);
 if (fragres.Code is not null) File.WriteAllBytes("fragment.spv", fragres.Code);
 ```
+
+## NuGet package
+There's a NuGet package right [here](https://www.nuget.org/packages/NetShaderc)
